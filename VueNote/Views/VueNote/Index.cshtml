@@ -1,0 +1,93 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@* https://dotblogs.com.tw/ricochen/2017/02/19/101043 *@
+@*生產環境版本，優化了尺寸和速度*@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+<div id="myApp">
+    <div class="form-row">
+        <div class="col-2">
+            <div class="form-group">
+                <label>序號</label>
+                <div>
+                    @* 取id="TicketNo" 的值去後端使用like搜尋 *@
+                    <input class="form-control" name="TicketNo" type="text" id="TicketNo">
+                </div>
+            </div>
+        </div>
+        <div class="col-10">
+            <div class="form-group">
+                <label></label>
+                <div>@*v-on:click事件 執行loadData  *@
+                    <button class="btn btn-primary" v-on:click="loadData">搜尋</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+   
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th><span class="label label-info">ID</span></th>
+                <th><span class="label label-info">訂單</span></th>
+                <th><span class="label label-info">序號</span></th>
+                <th><span class="label label-info">檢查碼</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            @* serveremps是ajax成功回傳後的 jaon 資料 *@
+            <tr v-for="tk in serveremps">
+                <td>
+                    <span> {{ tk.ID }}</span>
+                </td>
+                <td>
+                    <span> {{ tk.OrderSN }}</span>
+                </td>
+                <td>
+                    <span> {{ tk.TicketNo }}</span>
+                </td>
+                <td>
+                    <span> {{ tk.ChkTag }}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    var vtblemps = new Vue({
+        el: '#myApp',
+        ready: function() {
+        },
+        data: {
+            serveremps: null,
+        },
+        methods: {
+            loadData: function() {
+                $.ajax({
+                    url: '@Url.Action("GetJsonData", "VueNote")',
+                    type: "post",
+                    data: { search:  $("#TicketNo").val()},
+                    async: true,
+                    cache: false,
+                    contentype: "application/json",
+                    datatype: "json",
+                    success: function (rdatas) {
+                        //alert(rdatas.serverModel);
+                        vtblemps.serveremps = JSON.parse(rdatas.serverModel);
+                    },
+                    error: function(jqXHR, errorThrown) {
+                        alert(errorThrown);
+                    }
+                });
+            }
+        }
+    });
+
+</script>
