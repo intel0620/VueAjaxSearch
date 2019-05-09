@@ -19,7 +19,7 @@ namespace VueNote.Controllers
         [HttpPost]
         public ActionResult GetJsonData(string search)
         {
-            string sql = @" SELECT [ID],[OrderSN][TicketNo],[ChkTag] 
+            string sql = @" SELECT [ID],[OrderSN],[TicketNo],[ChkTag] 
                             FROM [WEB_BP_NET].[dbo].[XgDpcFileData] WITH(NOLOCK)
                             WHERE TicketNo LIKE @sn";
 
